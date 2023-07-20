@@ -1,0 +1,10 @@
+---
+- name: End to end showroom deploy
+  hosts: all
+  gather_facts: false
+  become: false
+
+  tasks:
+
+    - name: Simple ping to validate inventory
+      ansible.builtin.ping:

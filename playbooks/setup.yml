@@ -1,0 +1,21 @@
+---
+- name: Install all pre-reqs for the showroom collection
+  hosts: all
+  gather_facts: false
+  become: false
+
+  pre_tasks:
+
+    - name: Staring showroom setup
+      ansible.builtin.debug:
+        msg: Starting setup community.showroom dependencies
+
+  # roles:
+  #
+  #   - showroom_dependencies
+
+  post_tasks:
+
+    - name: Finished community.showroom setup
+      ansible.builtin.debug:
+        msg: Finished community.showroom setup

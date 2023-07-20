@@ -1,0 +1,16 @@
+---
+- name: End to end showroom deploy
+  hosts: all
+  gather_facts: true      # Operating system etc is important
+  become: true            # Installation privileges etc required
+
+  tasks:
+
+    - name: Simple ping to validate inventory and connectivity
+      ansible.builtin.ping:
+      tags:
+        - ping
+
+    - name: Run the complete showroom deployer
+      ansible.builtin.include_role:
+        name: showroom_deploy

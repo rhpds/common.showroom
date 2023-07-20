@@ -1,0 +1,45 @@
+---
+- name: Clone and Inject Showroom Tasks
+  block:
+
+    - name: Clone showroom primary repo - lab content in adoc
+      ansible.builtin.git:
+        repo: "{{ showroom_git_repo }}"
+        dest: "{{ showroom_home_dir }}/content"
+        force: true
+        version: "{{ showroom_git_tag | default('main') }}"
+      become_user: "{{ showroom_user }}"
+
+    - name: Setup and inject user variables to be used by showroom aka user-data
+      block:
+
+        - name: Load vars from AgnosticD user-data
+          when: showroom_deployer_agnosticd | default(true) | bool
+          block:
+
+            - name: Read in AgnosticD user-data 
+              ansible.builtin.set_fact:
+                showroom_user_data: >-
+                  {{ lookup('file', hostvars.localhost.output_dir ~ '/user-data.yaml', errors='ignore') | from_yaml }}
+
+            - name: Fallback for empty AgnosticD User Data
+              when: f_user_data | default({}) | length == 0
+              ansible.builtin.set_fact:
+                showroom_user_data: []
+
+        - name: Load vars from AgnosticD user-data
+          when: not showroom_deployer_agnosticd | bool
+          block:
+
+
+        - name: Create KV file
+          ansible.builtin.template:
+            src: include_vars.adoc.j2
+            dest: "{{ showroom_home_dir }}/content/documentation/modules/ROOT/pages/include_vars.adoc"
+            owner: "{{ showroom_user }}"
+            group: "{{ showroom_group }}"
+            mode: '0644'
+          tags:
+            - showroom-var-injection
+  tags:
+    - showroom-clone-and-inject
