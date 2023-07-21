@@ -28,7 +28,9 @@
     group: "{{ showroom_user }}"
     mode: "u=rw,g=r,o=r"
   vars:
-    showroom_host: "{{ groups['bastions'][0] | regex_replace('\\..*$') }}.{{ guid }}{{ subdomain_base_suffix }}"
+    showroom_host: "{{ showroom_user_data.targethost | default('showroom.example.com')}}" # TODO: Explore simplification, do we create a default showroom host? eg bastion
+     # showroom_host: "{{ groups['bastions'][0] | regex_replace('\\..*$') }}.{{ guid }}{{ subdomain_base_suffix }}"
+    #    bastion.7jzjj.sandbox265.opentlc.com
   loop:
     - src: index.html.j2
       dest: index.html

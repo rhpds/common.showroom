@@ -4,8 +4,16 @@
 #   - does it run
 #   - all of it?
 
+# - name: Output showroom view(s) URLs as userinfo and userdata
+#   when: showroom_deployer_agnosticd | default(true) | bool
+#   agnosticd_user_info:
+#     msg: "showroom_primary_view_url: http://{{ groups['bastions'][0] | regex_replace('\\..*$') }}.{{ guid }}{{ subdomain_base_suffix }}:8000"
+#     data:
+#       showroom_primary_view_url: "http://{{ groups['bastions'][0] | regex_replace('\\..*$') }}.{{ guid }}{{ subdomain_base_suffix }}:8000"
+
+# TODO: Implement non agnosticd info
+
 - name: Output showroom view(s) URLs as userinfo and userdata
-  agnosticd_user_info:
-    msg: "showroom_primary_view_url: http://{{ groups['bastions'][0] | regex_replace('\\..*$') }}.{{ guid }}{{ subdomain_base_suffix }}:8000"
-    data:
-      showroom_primary_view_url: "http://{{ groups['bastions'][0] | regex_replace('\\..*$') }}.{{ guid }}{{ subdomain_base_suffix }}:8000"
+  when: showroom_deployer_agnosticd | default(true) | bool
+  ansible.builtin.debug:
+    msg: "showroom_primary_view_url: http://{{ showroom_user_data.targethost }}:8000"

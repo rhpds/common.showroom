@@ -11,6 +11,10 @@ showroom_user: showroom
 showroom_group: showroom
 showroom_home_dir: /opt/showroom                    # Also base dir for all things showroom
 
+showroom_deployer_agnosticd: true                   # Assume AgnosticD deploy be default, else set false
+
+showroom_user_data: []                              # Just in case we have no var injection, aka "the empty set"
+
 showroom_container_compose_template: main_compose_template.j2
 
 showroom_tab_services:
